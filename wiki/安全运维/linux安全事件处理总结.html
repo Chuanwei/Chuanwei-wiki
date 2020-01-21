@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>linux安全事件处理总结 | Chuanwei&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="linux" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="0x00 前言当企业发生黑客入侵、系统崩溃或其它影响业务正常运行的安全事件时，急需第一时间进行处理，使企业的网络信息系统在最短时间内恢复正常工作，进一步查找入侵来源，还原入侵事故过程，同时给出解决方案与防范措施，为企业挽回或减少经济损失。   针对常见的攻击事件，结合工作中应急响应事件分析和解决的方法，总结了一些Linux服务器入侵排查的思路。 0x01 入侵排查思路一、账号安全基本使用： 1、用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux安全事件处理总结">
+<meta property="og:url" content="http://wiki.viewcn.cn/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/linux%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">
+<meta property="og:site_name" content="Chuanwei&#39;s Wiki">
+<meta property="og:description" content="0x00 前言当企业发生黑客入侵、系统崩溃或其它影响业务正常运行的安全事件时，急需第一时间进行处理，使企业的网络信息系统在最短时间内恢复正常工作，进一步查找入侵来源，还原入侵事故过程，同时给出解决方案与防范措施，为企业挽回或减少经济损失。   针对常见的攻击事件，结合工作中应急响应事件分析和解决的方法，总结了一些Linux服务器入侵排查的思路。 0x01 入侵排查思路一、账号安全基本使用： 1、用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-08-21T14:12:15.000Z">
+<meta property="article:modified_time" content="2018-08-21T14:12:15.000Z">
+<meta property="article:author" content="Chuanwei">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Chuanwei&#39;s Wiki" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Chuanwei&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/tools">工具</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/tools">工具</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>分类</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            学习材料
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%96%87%E7%AB%A0%E6%94%B6%E9%9B%86.html">网络安全文章收集</a></li>  <li class="file"><a href="/wiki/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%BD%91%E5%9D%80%E6%94%B6%E9%9B%86.html">网络安全网址收集</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            安全运维
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file active"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/linux%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">linux安全事件处理总结</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%90%AD%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E7%9A%84ELK%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F.html">搭建安全认证的ELK日志系统</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/windwos%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">windwos安全事件处理总结</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%BC%8F%E6%B4%9E%E6%8A%AB%E9%9C%B2%E7%BD%91%E7%AB%99%E7%9B%91%E6%B5%8B%E5%91%8A%E8%AD%A6%E8%84%9A%E6%9C%AC.html">漏洞披露网站监测告警脚本</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            渗透测试
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            信息收集
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/Nmap%E6%89%AB%E6%8F%8F%E7%BB%93%E6%9E%9CXML%E5%A4%84%E7%90%86%E8%BD%AC%E4%B8%BACSV%E6%96%87%E4%BB%B6.html">Nmap扫描结果xml处理</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            内网渗透
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8Fwindows%E7%AF%87.html">内网渗透windows篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            工具教程
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/Nessus-%E5%AE%89%E8%A3%85%E7%A6%BB%E7%BA%BF%E6%BF%80%E6%B4%BB%E5%B9%B6%E5%8D%87%E7%BA%A7.html">Nessus-安装离线激活并升级</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            靶场笔记
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            sqli-labs
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/sqli-labs/sqli-libs%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%20less%201-10.html">sqli-libs学习笔记 Less 1-10</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            生活点滴
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E5%8F%B0%E6%B9%BE%E4%B9%8B%E8%A1%8C.html">台湾之行</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%88%B1%E5%89%AA%E8%BE%91%E8%A7%86%E9%A2%91%E5%88%87%E5%89%B2%E8%84%9A%E6%9C%AC.html">爱剪辑视频切割脚本</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%BD%91%E7%BB%9C%E6%96%AD%E5%BC%80%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5%E8%84%9A%E6%9C%AC.html">网络断开自动连接脚本</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E8%A5%BF%E8%97%8F%E4%B9%8B%E8%A1%8C.html">西藏之行</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            等级保护
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            测评指导书
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            主机层面
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E4%B8%BB%E6%9C%BA%E5%B1%82%E9%9D%A2/MYSQL%E6%95%B0%E6%8D%AE%E5%BA%93.html">Mysql数据库测评</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络层面
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E7%BD%91%E7%BB%9C%E5%B1%82%E9%9D%A2/%E7%BD%91%E7%BB%9C%E5%85%A8%E5%B1%80.html">网络全局</a></li>  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E7%BD%91%E7%BB%9C%E5%B1%82%E9%9D%A2/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87.html">网络设备</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            编程学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            git学习
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/git%E5%AD%A6%E4%B9%A0/github%E7%9A%84gh-pages%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0.html">github和hexo博客搭建笔记</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-安全运维/linux安全事件处理总结" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/linux/" rel="tag">linux</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/linux%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">
+            <time datetime="2018-08-21T14:12:15.000Z" itemprop="datePublished">2018-08-21</time>
+        </a>
+    </div>
+
+
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/linux%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">
+            <time datetime="2018-08-21T14:12:15.000Z" itemprop="datePublished">2018-08-21</time>
+        </a>
+    </div>
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/raw/master/source/_posts/安全运维/linux安全事件处理总结.md' target="_blank" rel="noopener"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/edit/master/source/_posts/安全运维/linux安全事件处理总结.md' target="_blank" rel="noopener"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/commits/master/source/_posts/安全运维/linux安全事件处理总结.md' target="_blank" rel="noopener"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            linux安全事件处理总结
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>当企业发生黑客入侵、系统崩溃或其它影响业务正常运行的安全事件时，急需第一时间进行处理，使企业的网络信息系统在最短时间内恢复正常工作，进一步查找入侵来源，还原入侵事故过程，同时给出解决方案与防范措施，为企业挽回或减少经济损失。  </p>
+<p>针对常见的攻击事件，结合工作中应急响应事件分析和解决的方法，总结了一些Linux服务器入侵排查的思路。</p>
+<h1 id="0x01-入侵排查思路"><a href="#0x01-入侵排查思路" class="headerlink" title="0x01 入侵排查思路"></a>0x01 入侵排查思路</h1><h2 id="一、账号安全"><a href="#一、账号安全" class="headerlink" title="一、账号安全"></a>一、账号安全</h2><p>基本使用：</p>
+<p>1、用户信息文件/etc/passwd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:0:root:&#x2F;root:&#x2F;bin&#x2F;bash</span><br><span class="line">account:password:UID:GID:GECOS:directory:shell</span><br><span class="line">用户名：密码：用户ID：组ID：用户说明：家目录：登陆之后shell</span><br><span class="line">注意：无密码只允许本机登陆，远程不允许登陆</span><br></pre></td></tr></table></figure>
+
+
+<p>2、影子文件/etc/shadow</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root:$6$oGs1PqhL2p3ZetrE$X7o7bzoouHQVSEmSgsYN5UD4.kMHx6qgbTqwNVC5oOAouXvcjQSt.Ft7ql1WpkopY0UV9ajBwUt1DpYxTCVvI&#x2F;:16809:0:99999:7:::</span><br><span class="line">用户名：加密密码：密码最后一次修改日期：两次密码的修改时间间隔：密码有效期：密码修改</span><br><span class="line">到期到的警告天数：密码过期之后的宽限天数：账号失效时间：保留</span><br><span class="line">who      查看当前登录用户（tty本地登陆  pts远程登录）</span><br><span class="line">w        查看系统信息，想知道某一时刻用户的行为</span><br><span class="line">uptime    查看登陆多久、多少用户，负载</span><br></pre></td></tr></table></figure>
+
+<p>入侵排查：</p>
+<p>1、查询特权用户特权用户(uid 为0)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# awk -F: &#39;$3&#x3D;&#x3D;0&#123;print $1&#125;&#39; &#x2F;etc&#x2F;passwd</span><br></pre></td></tr></table></figure>
+
+
+<p>2、查询可以远程登录的帐号信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# awk &#39;&#x2F;\$1|\$6&#x2F;&#123;print $1&#125;&#39; &#x2F;etc&#x2F;shadow</span><br></pre></td></tr></table></figure>
+
+
+<p>3、除root帐号外，其他帐号是否存在sudo权限。如非管理需要，普通帐号应删除sudo权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# more &#x2F;etc&#x2F;sudoers | grep -v &quot;^#\|^$&quot; | grep &quot;ALL&#x3D;(ALL)&quot;</span><br></pre></td></tr></table></figure>
+
+
+<p>4、禁用或删除多余及可疑的帐号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usermod -L user    禁用帐号，帐号无法登录，&#x2F;etc&#x2F;shadow第二栏为!开头</span><br><span class="line">userdel user       删除user用户</span><br><span class="line">userdel -r user    将删除user用户，并且将&#x2F;home目录下的user目录一并删除</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、历史命令"><a href="#二、历史命令" class="headerlink" title="二、历史命令"></a>二、历史命令</h2><p>基本使用：</p>
+<p>通过.bash_history查看帐号执行过的系统命令<br>1、root的历史命令</p>
+<p>histroy</p>
+<p>2、打开/home各帐号目录下的.bash_history，查看普通帐号的历史命令<br>为历史的命令增加登录的IP地址、执行命令时间等信息：</p>
+<p>1）保存1万条命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i &#39;s&#x2F;^HISTSIZE&#x3D;1000&#x2F;HISTSIZE&#x3D;10000&#x2F;g&#39; &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+
+
+<p>2）在/etc/profile的文件尾部添加如下行数配置信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">######jiagu history xianshi#########</span><br><span class="line">USER_IP&#x3D;&#96;who -u am i 2&gt;&#x2F;dev&#x2F;null | awk &#39;&#123;print $NF&#125;&#39; | sed -e &#39;s&#x2F;[()]&#x2F;&#x2F;g&#39;&#96;</span><br><span class="line">if [ &quot;$USER_IP&quot; &#x3D; &quot;&quot; ]</span><br><span class="line">then</span><br><span class="line">USER_IP&#x3D;&#96;hostname&#96;</span><br><span class="line">fi</span><br><span class="line">export HISTTIMEFORMAT&#x3D;&quot;%F %T $USER_IP &#96;whoami&#96; &quot;</span><br><span class="line">shopt -s histappend</span><br><span class="line">export PROMPT_COMMAND&#x3D;&quot;history -a&quot;</span><br><span class="line">######### jiagu history xianshi ##########</span><br></pre></td></tr></table></figure>
+
+<p>3）source /etc/profile让配置生效</p>
+<p>生成效果： 1  2018-07-10 19:45:39 192.168.204.1 root source /etc/profile</p>
+<p>3、历史操作命令的清除：history -c</p>
+<p>但此命令并不会清除保存在文件中的记录，因此需要手动删除.bash_profile文件中的记录。</p>
+<p>入侵排查：</p>
+<p>进入用户目录下<br>cat .bash_history &gt;&gt; history.txt</p>
+<h2 id="三、端口"><a href="#三、端口" class="headerlink" title="三、端口"></a>三、端口</h2><p>使用netstat 网络连接命令，分析可疑端口、IP、PID</p>
+<p>netstat -antlp|more</p>
+<p>查看下pid所对应的进程文件路径，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">运行ls -l &#x2F;proc&#x2F;$PID&#x2F;exe或file &#x2F;proc&#x2F;$PID&#x2F;exe（$PID 为对应的pid 号）</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、进程"><a href="#四、进程" class="headerlink" title="四、进程"></a>四、进程</h2><p>使用ps命令，分析进程</p>
+<p>ps aux | grep pid</p>
+<h2 id="五、开机启动项"><a href="#五、开机启动项" class="headerlink" title="五、开机启动项"></a>五、开机启动项</h2><p>基本使用：</p>
+<p>系统运行级别示意图：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">运行级别	含义</span><br><span class="line">    0	关机</span><br><span class="line">    1	单用户模式，可以想象为windows的安全模式，主要用于系统修复</span><br><span class="line">    2	不完全的命令行模式，不含NFS服务</span><br><span class="line">    3	完全的命令行模式，就是标准字符界面</span><br><span class="line">    4	系统保留</span><br><span class="line">    5	图形模式</span><br><span class="line">    6	重启动</span><br></pre></td></tr></table></figure>
+
+<p>查看运行级别命令<br>runlevel  </p>
+<p>系统默认允许级别</p>
+<p>vi  /etc/inittab</p>
+<p>id=3：initdefault  系统开机后直接进入哪个运行级别</p>
+<p>开机启动配置文件</p>
+<p>/etc/rc.local<br>/etc/rc.d/rc[0~6].d</p>
+<p>例子:当我们需要开机启动自己的脚本时，只需要将可执行脚本丢在/etc/init.d目录下，然后在/etc/rc.d/rc*.d中建立软链接即可</p>
+<p>root@localhost ~]# ln -s /etc/init.d/sshd /etc/rc.d/rc3.d/S100ssh</p>
+<p>此处sshd是具体服务的脚本文件，S100ssh是其软链接，S开头代表加载时自启动；如果是K开头的脚本文件，代表运行级别加载时需要关闭的。</p>
+<p>入侵排查：</p>
+<p>启动项文件：<br>more /etc/rc.local<br>/etc/rc.d/rc[0~6].d<br>ls -l /etc/rc.d/rc3.d/</p>
+<h2 id="六、定时任务"><a href="#六、定时任务" class="headerlink" title="六、定时任务"></a>六、定时任务</h2><p>基本使用</p>
+<p>1、利用crontab创建计划任务</p>
+<p>基本命令</p>
+<p>crontab -l   列出某个用户cron服务的详细内容</p>
+<p>Tips：默认编写的crontab文件会保存在 (/var/spool/cron/用户名 例如: /var/spool/cron/root</p>
+<p>crontab -r   删除每个用户cront任务(谨慎：删除所有的计划任务)</p>
+<p>crontab -e   使用编辑器编辑当前的crontab文件</p>
+<p>如：*/1 * * * * echo “hello world” &gt;&gt; /tmp/test.txt 每分钟写入文件</p>
+<p>2、利用anacron实现异步定时任务调度</p>
+<p>使用案例</p>
+<p>每天运行 /home/backup.sh脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;anacrontab</span><br><span class="line">@daily    10    example.daily   &#x2F;bin&#x2F;bash &#x2F;home&#x2F;backup.sh</span><br></pre></td></tr></table></figure>
+
+<p>当机器在 backup.sh 期望被运行时是关机的，anacron会在机器开机十分钟之后运行它，而不用再等待 7天。</p>
+<p>入侵排查</p>
+<p>重点关注以下目录中是否存在恶意脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;var&#x2F;spool&#x2F;cron&#x2F;* </span><br><span class="line">&#x2F;etc&#x2F;crontab</span><br><span class="line">&#x2F;etc&#x2F;cron.d&#x2F;*</span><br><span class="line">&#x2F;etc&#x2F;cron.daily&#x2F;* </span><br><span class="line">&#x2F;etc&#x2F;cron.hourly&#x2F;* </span><br><span class="line">&#x2F;etc&#x2F;cron.monthly&#x2F;*</span><br><span class="line">&#x2F;etc&#x2F;cron.weekly&#x2F;</span><br><span class="line">&#x2F;etc&#x2F;anacrontab</span><br><span class="line">&#x2F;var&#x2F;spool&#x2F;anacron&#x2F;*</span><br></pre></td></tr></table></figure>
+
+<p>小技巧：</p>
+<p> more /etc/cron.daily/*  查看目录下所有文件</p>
+<h2 id="七、服务"><a href="#七、服务" class="headerlink" title="七、服务"></a>七、服务</h2><p>服务自启动</p>
+<p>第一种修改方法：</p>
+<p>chkconfig [–level 运行级别] [独立服务名] [on|off]</p>
+<p>chkconfig –level  2345 httpd on  开启自启动</p>
+<p>chkconfig httpd on （默认level是2345）</p>
+<p>第二种修改方法：</p>
+<p>修改/etc/re.d/rc.local 文件<br>加入 /etc/init.d/httpd start</p>
+<p>第三种修改方法：</p>
+<p>使用ntsysv命令管理自启动，可以管理独立服务和xinetd服务。</p>
+<p>入侵排查</p>
+<p>1、查询已安装的服务：</p>
+<p>RPM包安装的服务</p>
+<p>chkconfig  –list  查看服务自启动状态，可以看到所有的RPM包安装的服务</p>
+<p>ps aux | grep crond 查看当前服务</p>
+<p>系统在3与5级别下的启动项 </p>
+<p>中文环境</p>
+<p>chkconfig –list | grep “3:启用|5:启用”</p>
+<p>英文环境</p>
+<p>chkconfig –list | grep “3:on|5:on”<br>源码包安装的服务</p>
+<p>查看服务安装位置 ，一般是在/user/local/</p>
+<p>service httpd start</p>
+<p>搜索/etc/rc.d/init.d/  查看是否存在</p>
+<h1 id="八、系统日志"><a href="#八、系统日志" class="headerlink" title="八、系统日志"></a>八、系统日志</h1><p>日志默认存放位置：/var/log/</p>
+<p>查看日志配置情况：more /etc/rsyslog.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">日志文件	说明</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;cron	记录了系统定时任务相关的日志</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;cups	记录打印信息的日志</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;dmesg	记录了系统在开机时内核自检的信息，也可以使用dmesg命令直接查看内核自检信息</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;mailog	记录邮件信息</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;message	记录系统重要信息的日志。这个日志文件中会记录Linux系统的绝大多数重要信息，如果系统出现问题时，首先要检查的就应该是这个日志文件</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;btmp	记录错误登录日志，这个文件是二进制文件，不能直接vi查看，而要使用lastb命令查看</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;lastlog	记录系统中所有用户最后一次登录时间的日志，这个文件是二进制文件，不能直接vi，而要使用lastlog命令查看</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;wtmp	永久记录所有用户的登录、注销信息，同时记录系统的启动、重启、关机事件。同样这个文件也是一个二进制文件，不能直接vi，而需要使用last命令来查看</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;utmp	记录当前已经登录的用户信息，这个文件会随着用户的登录和注销不断变化，只记录当前登录用户的信息。同样这个文件不能直接vi，而要使用w,who,users等命令来查询</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;secure	记录验证和授权方面的信息，只要涉及账号和密码的程序都会记录，比如SSH登录，su切换用户，sudo授权，甚至添加用户和修改用户密码都会记录在这个日志文件中</span><br></pre></td></tr></table></figure>
+
+<p>日志分析技巧：</p>
+<p>1、定位有多少IP在爆破主机的root帐号：    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep &quot;Failed password for root&quot; &#x2F;var&#x2F;log&#x2F;secure | awk &#39;&#123;print $11&#125;&#39; | sort | uniq -c | sort -nr | more</span><br></pre></td></tr></table></figure>
+
+
+<p>定位有哪些IP在爆破：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep &quot;Failed password&quot; &#x2F;var&#x2F;log&#x2F;secure|grep -E -o &quot;(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)&quot;|uniq -c</span><br></pre></td></tr></table></figure>
+
+
+<p>爆破用户名字典是什么？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep &quot;Failed password&quot; &#x2F;var&#x2F;log&#x2F;secure|perl -e &#39;while($_&#x3D;&lt;&gt;)&#123; &#x2F;for(.*?) from&#x2F;; print &quot;$1\n&quot;;&#125;&#39;|uniq -c|sort -nr</span><br></pre></td></tr></table></figure>
+
+
+<p>2、登录成功的IP有哪些：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep &quot;Accepted &quot; &#x2F;var&#x2F;log&#x2F;secure | awk &#39;&#123;print $11&#125;&#39; | sort | uniq -c | sort -nr | more</span><br></pre></td></tr></table></figure>
+
+
+<p>登录成功的日期、用户名、IP：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep &quot;Accepted &quot; &#x2F;var&#x2F;log&#x2F;secure | awk &#39;&#123;print $1,$2,$3,$9,$11&#125;&#39;</span><br></pre></td></tr></table></figure>
+
+<p>3、增加一个用户kali日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Jul 10 00:12:15 localhost useradd[2382]: new group: name&#x3D;kali, GID&#x3D;1001</span><br><span class="line">Jul 10 00:12:15 localhost useradd[2382]: new user: name&#x3D;kali, UID&#x3D;1001, GID&#x3D;1001, home&#x3D;&#x2F;home&#x2F;kali, shell&#x3D;&#x2F;bin&#x2F;bash</span><br><span class="line">Jul 10 00:12:58 localhost passwd: pam_unix(passwd:chauthtok): password changed for kali</span><br><span class="line">#grep &quot;useradd&quot; &#x2F;var&#x2F;log&#x2F;secure</span><br></pre></td></tr></table></figure>
+
+<p>4、删除用户kali日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Jul 10 00:14:17 localhost userdel[2393]: delete user &#39;kali&#39;</span><br><span class="line">Jul 10 00:14:17 localhost userdel[2393]: removed group &#39;kali&#39; owned by &#39;kali&#39;</span><br><span class="line">Jul 10 00:14:17 localhost userdel[2393]: removed shadow group &#39;kali&#39; owned by &#39;kali&#39;</span><br><span class="line">#grep &quot;userdel&quot; &#x2F;var&#x2F;log&#x2F;secure</span><br></pre></td></tr></table></figure>
+
+<p>5、su切换用户：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Jul 10 00:38:13 localhost su: pam_unix(su-l:session): session opened for user good by root(uid&#x3D;0)</span><br></pre></td></tr></table></figure>
+
+<p>sudo授权执行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo -l</span><br><span class="line">Jul 10 00:43:09 localhost sudo:    good : TTY&#x3D;pts&#x2F;4 ; PWD&#x3D;&#x2F;home&#x2F;good ; USER&#x3D;root ; COMMAND&#x3D;&#x2F;sbin&#x2F;shutdown -r now</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x03-工具篇"><a href="#0x03-工具篇" class="headerlink" title="0x03 工具篇"></a>0x03 工具篇</h1><h2 id="一、Rootkit查杀"><a href="#一、Rootkit查杀" class="headerlink" title="一、Rootkit查杀"></a>一、Rootkit查杀</h2><p>chkrootkit </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">网址：http:&#x2F;&#x2F;www.chkrootkit.org</span><br><span class="line">使用方法：</span><br><span class="line">wget ftp:&#x2F;&#x2F;ftp.pangeia.com.br&#x2F;pub&#x2F;seg&#x2F;pac&#x2F;chkrootkit.tar.gz</span><br><span class="line">tar zxvf chkrootkit.tar.gz</span><br><span class="line">cd chkrootkit-0.52</span><br><span class="line">make sense</span><br><span class="line">#编译完成没有报错的话执行检查</span><br><span class="line">.&#x2F;chkrootkit</span><br></pre></td></tr></table></figure>
+
+<p>rkhunter</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">网址：http:&#x2F;&#x2F;rkhunter.sourceforge.net</span><br><span class="line">使用方法：</span><br><span class="line">Wget https:&#x2F;&#x2F;nchc.dl.sourceforge.net&#x2F;project&#x2F;rkhunter&#x2F;rkhunter&#x2F;1.4.4&#x2F;rkhunter-1.4.4.tar.gz</span><br><span class="line">tar -zxvf rkhunter-1.4.4.tar.gz</span><br><span class="line">cd rkhunter-1.4.4</span><br><span class="line">.&#x2F;installer.sh --install</span><br><span class="line">rkhunter -c</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、病毒查杀"><a href="#二、病毒查杀" class="headerlink" title="二、病毒查杀"></a>二、病毒查杀</h2><p>Clamav</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">ClamAV的官方下载地址为：http:&#x2F;&#x2F;www.clamav.net&#x2F;download.html</span><br><span class="line">安装方式一：</span><br><span class="line">1、安装zlib：</span><br><span class="line">wget http:&#x2F;&#x2F;nchc.dl.sourceforge.net&#x2F;project&#x2F;libpng&#x2F;zlib&#x2F;1.2.7&#x2F;zlib-1.2.7.tar.gz </span><br><span class="line">tar -zxvf  zlib-1.2.7.tar.gz</span><br><span class="line">cd zlib-1.2.7</span><br><span class="line">#安装一下gcc编译环境： yum install gcc</span><br><span class="line">CFLAGS&#x3D;&quot;-O3 -fPIC&quot; .&#x2F;configure --prefix&#x3D; &#x2F;usr&#x2F;local&#x2F;zlib&#x2F;</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line">2、添加用户组clamav和组成员clamav：</span><br><span class="line">groupadd clamav</span><br><span class="line">useradd -g clamav -s &#x2F;bin&#x2F;false -c &quot;Clam AntiVirus&quot; clamav</span><br><span class="line"></span><br><span class="line">3、安装Clamav</span><br><span class="line">tar –zxvf clamav-0.97.6.tar.gz</span><br><span class="line">cd clamav-0.97.6</span><br><span class="line">.&#x2F;configure --prefix&#x3D;&#x2F;opt&#x2F;clamav --disable-clamav -with-zlib&#x3D;&#x2F;usr&#x2F;local&#x2F;zlib</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line">4、配置Clamav</span><br><span class="line">mkdir &#x2F;opt&#x2F;clamav&#x2F;logs</span><br><span class="line">mkdir &#x2F;opt&#x2F;clamav&#x2F;updata</span><br><span class="line">touch &#x2F;opt&#x2F;clamav&#x2F;logs&#x2F;freshclam.log</span><br><span class="line">touch &#x2F;opt&#x2F;clamav&#x2F;logs&#x2F;clamd.log</span><br><span class="line">cd &#x2F;opt&#x2F;clamav&#x2F;logs</span><br><span class="line">chown clamav:clamav clamd.log</span><br><span class="line">chown clamav:clamav freshclam.log</span><br><span class="line"></span><br><span class="line">5、ClamAV 使用：</span><br><span class="line"> &#x2F;opt&#x2F;clamav&#x2F;bin&#x2F;freshclam 升级病毒库</span><br><span class="line">.&#x2F;clamscan –h 查看相应的帮助信息</span><br><span class="line">.&#x2F;clamscan -r &#x2F;home  扫描所有用户的主目录就使用</span><br><span class="line">.&#x2F;clamscan -r --bell -i &#x2F;bin  扫描bin目录并且显示有问题的文件的扫描结果</span><br><span class="line">安装方式二：</span><br><span class="line">#安装</span><br><span class="line">yum install -y clamav</span><br><span class="line">#更新病毒库</span><br><span class="line">freshclam</span><br><span class="line">#扫描方法</span><br><span class="line">clamscan -r &#x2F;etc --max-dir-recursion&#x3D;5 -l &#x2F;root&#x2F;etcclamav.log</span><br><span class="line">clamscan -r &#x2F;bin --max-dir-recursion&#x3D;5 -l &#x2F;root&#x2F;binclamav.log</span><br><span class="line">clamscan -r &#x2F;usr --max-dir-recursion&#x3D;5 -l &#x2F;root&#x2F;usrclamav.log</span><br><span class="line">#扫描并杀毒</span><br><span class="line">clamscan -r  --remove  &#x2F;usr&#x2F;bin&#x2F;bsd-port</span><br><span class="line">clamscan -r  --remove  &#x2F;usr&#x2F;bin&#x2F;</span><br><span class="line">clamscan -r --remove  &#x2F;usr&#x2F;local&#x2F;zabbix&#x2F;sbin</span><br><span class="line">#查看日志发现</span><br><span class="line">cat &#x2F;root&#x2F;usrclamav.log |grep FOUND</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、webshell查杀"><a href="#三、webshell查杀" class="headerlink" title="三、webshell查杀"></a>三、webshell查杀</h2><p>linux版：</p>
+<p>河马webshell查杀：<a href="http://www.shellpub.com" target="_blank" rel="noopener">http://www.shellpub.com</a></p>
+<p>深信服Webshell网站后门检测工具：<a href="http://edr.sangfor.com.cn/backdoor_detection.html" target="_blank" rel="noopener">http://edr.sangfor.com.cn/backdoor_detection.html</a></p>
+<h2 id="四、RPM-check检查"><a href="#四、RPM-check检查" class="headerlink" title="四、RPM check检查"></a>四、RPM check检查</h2><p>系统完整性可以通过rpm自带的-Va来校验检查所有的rpm软件包，查看哪些命令是否被替换了：</p>
+<p>./rpm -Va &gt; rpm.log</p>
+<p>如果一切均校验正常将不会产生任何输出，如果有不一致的地方，就会显示出来，输出格式是8位长字符串，每个字符都用以表示文件与RPM数据库中一种属性的比较结果 ，如果是. (点) 则表示测试通过。</p>
+<p>验证内容中的8个信息的具体内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">S         文件大小是否改变</span><br><span class="line">M         文件的类型或文件的权限（rwx）是否被改变</span><br><span class="line">5         文件MD5校验是否改变（可以看成文件内容是否改变）</span><br><span class="line">D         设备中，从代码是否改变</span><br><span class="line">L         文件路径是否改变</span><br><span class="line">U         文件的属主（所有者）是否改变</span><br><span class="line">G         文件的属组是否改变</span><br><span class="line">T         文件的修改时间是否改变</span><br></pre></td></tr></table></figure>
+
+<p>如果命令被替换了，如何去还原回来：</p>
+<p>文件提取还原过程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rpm  -qf &#x2F;bin&#x2F;ls  查询ls命令属于哪个软件包</span><br><span class="line">mv  &#x2F;bin&#x2F;ls &#x2F;tmp  先把ls转移到tmp目录下，造成ls命令丢失的假象</span><br><span class="line">rpm2cpio &#x2F;mnt&#x2F;cdrom&#x2F;Packages&#x2F;coreutils-8.4-19.el6.i686.rpm | cpio -idv .&#x2F;bin&#x2F;ls 提取rpm包中ls命令到当前目录的&#x2F;bin&#x2F;ls下</span><br><span class="line">cp &#x2F;root&#x2F;bin&#x2F;ls  &#x2F;bin&#x2F; 把ls命令复制到&#x2F;bin&#x2F;目录 修复文件丢失</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://mp.weixin.qq.com/s/MAN6LjmWEhFGpucBbXO6Zw" target="_blank" rel="noopener">原文链接</a></p>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/Nmap%E6%89%AB%E6%8F%8F%E7%BB%93%E6%9E%9CXML%E5%A4%84%E7%90%86%E8%BD%AC%E4%B8%BACSV%E6%96%87%E4%BB%B6.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Nmap扫描结果xml处理
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%88%B1%E5%89%AA%E8%BE%91%E8%A7%86%E9%A2%91%E5%88%87%E5%89%B2%E8%84%9A%E6%9C%AC.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">爱剪辑视频切割脚本</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Chuanwei &copy; 2020 
+            <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a href="https://github.com/zthxxx/hexo-theme-Wikitten" target="_blank" rel="noopener">wikitten</a>
+            
+                <br>
+				<span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | 
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"><span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
