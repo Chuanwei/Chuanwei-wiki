@@ -1,7 +1,0 @@
-User-agent: *
-Disallow: /vendors/
-Disallow: /js/
-Disallow: /css/
-Disallow: /vendor/
-Disallow: /content.json
-Disallow: /404.html
