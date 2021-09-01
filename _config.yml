@@ -117,3 +117,6 @@ jsonContent:
 ### Creat sitemap
 sitemap:
   path: sitemap.xml
+
+admin:
+  deployCommand: 'hexo-pubish.bat'

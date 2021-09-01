@@ -1,10 +1,10 @@
----
 title: linux安全事件处理总结
-date: 2018-08-21 22:12:15
-updated: 2018-08-21 22:12:15
 categories:
-- 安全运维
-tags: linux
+  - 安全运维
+tags:
+  - linux
+date: 2018-08-21 22:12:00
+updated: 2018-08-21 22:12:15
 ---
 
 # 0x00 前言

@@ -1,0 +1,7 @@
+options:
+  askImageFilename: false
+  lineNumbers: false
+  imagePath: /images
+  overwriteImages: false
+editor:
+  lineNumbers: false
