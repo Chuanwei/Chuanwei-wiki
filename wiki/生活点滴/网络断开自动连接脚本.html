@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>网络断开自动连接脚本 | Chuanwei&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="python" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="由于安全运维需要，电脑需要长时间开机，方便在家中远程处理问题，但客户wifi和有线经常断线，重连即可，因此网上找了这个脚本改为支持py3，并支持有线，再也不怕断网了。一两年前的脚本了，现在收藏起来吧，需要的人拿走！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络断开自动连接脚本">
+<meta property="og:url" content="http://wiki.viewcn.cn/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%BD%91%E7%BB%9C%E6%96%AD%E5%BC%80%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5%E8%84%9A%E6%9C%AC.html">
+<meta property="og:site_name" content="Chuanwei&#39;s Wiki">
+<meta property="og:description" content="由于安全运维需要，电脑需要长时间开机，方便在家中远程处理问题，但客户wifi和有线经常断线，重连即可，因此网上找了这个脚本改为支持py3，并支持有线，再也不怕断网了。一两年前的脚本了，现在收藏起来吧，需要的人拿走！">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-08-05T13:22:20.000Z">
+<meta property="article:modified_time" content="2018-08-05T13:22:20.000Z">
+<meta property="article:author" content="Chuanwei">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Chuanwei&#39;s Wiki" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Chuanwei&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/tools">工具</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/tools">工具</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>分类</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            学习材料
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%96%87%E7%AB%A0%E6%94%B6%E9%9B%86.html">网络安全文章收集</a></li>  <li class="file"><a href="/wiki/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%BD%91%E5%9D%80%E6%94%B6%E9%9B%86.html">网络安全网址收集</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            安全运维
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%BC%8F%E6%B4%9E%E6%8A%AB%E9%9C%B2%E7%BD%91%E7%AB%99%E7%9B%91%E6%B5%8B%E5%91%8A%E8%AD%A6%E8%84%9A%E6%9C%AC.html">漏洞披露网站监测告警脚本</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/linux%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">linux安全事件处理总结</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/windwos%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">windwos安全事件处理总结</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%90%AD%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E7%9A%84ELK%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F.html">搭建安全认证的ELK日志系统</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            渗透测试
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            信息收集
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/Nmap%E6%89%AB%E6%8F%8F%E7%BB%93%E6%9E%9CXML%E5%A4%84%E7%90%86%E8%BD%AC%E4%B8%BACSV%E6%96%87%E4%BB%B6.html">Nmap扫描结果xml处理</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            内网渗透
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8Fwindows%E7%AF%87.html">内网渗透windows篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            工具教程
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/Nessus-%E5%AE%89%E8%A3%85%E7%A6%BB%E7%BA%BF%E6%BF%80%E6%B4%BB%E5%B9%B6%E5%8D%87%E7%BA%A7.html">Nessus-安装离线激活并升级</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            靶场笔记
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            sqli-labs
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/sqli-labs/sqli-libs%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%20less%201-10.html">sqli-libs学习笔记 Less 1-10</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            生活点滴
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E5%8F%B0%E6%B9%BE%E4%B9%8B%E8%A1%8C.html">台湾之行</a></li>  <li class="file active"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%BD%91%E7%BB%9C%E6%96%AD%E5%BC%80%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5%E8%84%9A%E6%9C%AC.html">网络断开自动连接脚本</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%88%B1%E5%89%AA%E8%BE%91%E8%A7%86%E9%A2%91%E5%88%87%E5%89%B2%E8%84%9A%E6%9C%AC.html">爱剪辑视频切割脚本</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E8%A5%BF%E8%97%8F%E4%B9%8B%E8%A1%8C.html">西藏之行</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            等级保护
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            测评指导书
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            主机层面
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E4%B8%BB%E6%9C%BA%E5%B1%82%E9%9D%A2/MYSQL%E6%95%B0%E6%8D%AE%E5%BA%93.html">Mysql数据库测评</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络层面
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E7%BD%91%E7%BB%9C%E5%B1%82%E9%9D%A2/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87.html">网络设备</a></li>  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E7%BD%91%E7%BB%9C%E5%B1%82%E9%9D%A2/%E7%BD%91%E7%BB%9C%E5%85%A8%E5%B1%80.html">网络全局</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            编程学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            git学习
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/git%E5%AD%A6%E4%B9%A0/github%E7%9A%84gh-pages%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0.html">github和hexo博客搭建笔记</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-生活点滴/网络断开自动连接脚本" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/">生活点滴</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/python/" rel="tag">python</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%BD%91%E7%BB%9C%E6%96%AD%E5%BC%80%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5%E8%84%9A%E6%9C%AC.html">
+            <time datetime="2018-08-05T13:22:20.000Z" itemprop="datePublished">2018-08-05</time>
+        </a>
+    </div>
+
+
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%BD%91%E7%BB%9C%E6%96%AD%E5%BC%80%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5%E8%84%9A%E6%9C%AC.html">
+            <time datetime="2018-08-05T13:22:20.000Z" itemprop="datePublished">2018-08-05</time>
+        </a>
+    </div>
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/raw/master/source/_posts/生活点滴/网络断开自动连接脚本.md' target="_blank" rel="noopener"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/edit/master/source/_posts/生活点滴/网络断开自动连接脚本.md' target="_blank" rel="noopener"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/commits/master/source/_posts/生活点滴/网络断开自动连接脚本.md' target="_blank" rel="noopener"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            网络断开自动连接脚本
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <p>由于安全运维需要，电脑需要长时间开机，方便在家中远程处理问题，但客户wifi和有线经常断线，重连即可，因此网上找了这个脚本改为支持py3，并支持有线，再也不怕断网了。一两年前的脚本了，现在收藏起来吧，需要的人拿走！</p>
+<a id="more"></a>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># coding: gb2312</span><br><span class="line">__author__ &#x3D; &#39;Elva&#39;</span><br><span class="line"># chuanwei to py3</span><br><span class="line"> </span><br><span class="line">import os</span><br><span class="line">import time</span><br><span class="line">import sys</span><br><span class="line">#import datetime</span><br><span class="line"> </span><br><span class="line">from time import localtime, strftime</span><br><span class="line"> </span><br><span class="line">###每N分钟检查一次网络,如果断开进行重连</span><br><span class="line">#f_handler&#x3D;open(&#39;net_check.log&#39;, &#39;w&#39;)</span><br><span class="line">#sys.stdout&#x3D;f_handler</span><br><span class="line"> </span><br><span class="line">#ISOFORMAT&#x3D;&#39;%Y-%m-%d %H:%M:%S&#39; #设置输出格式</span><br><span class="line"> </span><br><span class="line"># isinstance(c,int)</span><br><span class="line"># </span><br><span class="line">CAO_NI_MA3 &#x3D; &#39;&#39;&#39;</span><br><span class="line">  　                                  　　　　┏┓　　　┏┓    </span><br><span class="line">  　                                  　　　┏┛┻━━━┻┗┓  </span><br><span class="line">  　                                  　　　┃　　　　　　　┃  </span><br><span class="line">  　                                  　　　┃　　　━　　　┃  </span><br><span class="line">  　                                  　　　┃　┳┛　┗┳　┃  </span><br><span class="line">  　                                  　　　┃　　　　　　　┃  </span><br><span class="line">  　                                  　　　┃　　　┻　　　┃  </span><br><span class="line">  　                                  　　　┗━┓  神  ┏━┛  </span><br><span class="line">  　                                  　　　　　┃　兽  ┃      </span><br><span class="line">  　                                  　┏━━━┛　佑　┃      </span><br><span class="line">  　                                  ┏┛          护  ┃      </span><br><span class="line">  　                                  ┗┓              ┃      </span><br><span class="line">  　                                  　┗┓┏┳━┓┏┏┛      </span><br><span class="line">  　                                  　　┣┣┃　┣┣┃        </span><br><span class="line">  　                                  　　┗┻┛　┗┻┛        &#39;&#39;&#39;</span><br><span class="line"> </span><br><span class="line">   </span><br><span class="line">CAO_NI_MA &#x3D; &#39;&#39;&#39;</span><br><span class="line">  　　　　　┏┓　　　┏┓    </span><br><span class="line">  　　　　┏┛┻━━━┻┗┓  </span><br><span class="line">  　　　　┃　　　　　　　┃  </span><br><span class="line">  　　　　┃　　　━　　　┃  </span><br><span class="line">  　　　　┃　┳┛　┗┳　┃  </span><br><span class="line">  　　　　┃　　　　　　　┃  </span><br><span class="line">  　　　　┃　　　┻　　　┃  </span><br><span class="line">  　　　　┗━┓      ┏━┛  </span><br><span class="line">  　　　　　　┃　草　┃      </span><br><span class="line">  　　┏━━━┛　尼　┃      </span><br><span class="line">  　┏┛          玛  ┃      </span><br><span class="line">  　┗┓              ┃      </span><br><span class="line">  　　┗┓┏┳━┓┏┏┛      </span><br><span class="line">  　　　┣┣┃　┣┣┃        </span><br><span class="line">  　　　┗┻┛　┗┻┛        &#39;&#39;&#39;</span><br><span class="line">def intcCount():</span><br><span class="line">    intc &#x3D; open(&quot;rc_count.txt&quot;,&#39;w&#39;)</span><br><span class="line">    intc.write(&quot;0&quot;)</span><br><span class="line">def chcCount():</span><br><span class="line">    &#39;&#39;&#39;计数+1&#39;&#39;&#39;</span><br><span class="line">    fh &#x3D; open(&quot;rc_count.txt&quot;,&#39;w+&#39;)</span><br><span class="line">    count_ &#x3D; fh.read()</span><br><span class="line">    print count_</span><br><span class="line">    count_ &#x3D; int(count_)</span><br><span class="line">    count_ &#x3D; count_ + 1</span><br><span class="line">    #print count_</span><br><span class="line">    fh.seek(0)</span><br><span class="line">    fh.write(str(count_))</span><br><span class="line">    fh.close()</span><br><span class="line"> </span><br><span class="line">def log(text):</span><br><span class="line">    &#39;&#39;&#39; 记录日志&#39;&#39;&#39;</span><br><span class="line">    #global ISOFORMAT</span><br><span class="line">    #now &#x3D; datetime.datetime.now()</span><br><span class="line">    nowStr &#x3D; strftime(&quot;%Y-%m-%d %H:%M:%S&quot;, localtime());</span><br><span class="line">    msg &#x3D; nowStr + &quot; : &quot; + text</span><br><span class="line">    print(msg)</span><br><span class="line">    fh &#x3D; open(&quot;_netcheck.log&quot;,&#39;a&#39;)</span><br><span class="line">    fh.write(msg + &quot;\n&quot;)</span><br><span class="line">    fh.close()</span><br><span class="line">log(&quot;********************【--GOOD_LUCK--】********************&quot;)</span><br><span class="line">log(CAO_NI_MA3)</span><br><span class="line">log(&quot;********************【--GOOD_LUCK--】********************&quot;)</span><br><span class="line">#log(&quot;qcc&quot;)</span><br><span class="line">     </span><br><span class="line">#等待多少秒</span><br><span class="line">def wait(s):</span><br><span class="line">    &#39;&#39;&#39; 等待S秒&#39;&#39;&#39;</span><br><span class="line">    #print(&quot;---------------------SLEEP(%ss)--------------------&quot; %s)</span><br><span class="line">    if s &lt;&#x3D; 0:</span><br><span class="line">        return</span><br><span class="line">    i &#x3D; s*2-1;</span><br><span class="line">    while i &gt; 0:</span><br><span class="line">        i&#x3D;i-1</span><br><span class="line">        time.sleep(0.5)</span><br><span class="line">        print &#39;.&#39;,</span><br><span class="line">    time.sleep(0.5)</span><br><span class="line">    print &#39;.&#39;</span><br><span class="line">    #print(&quot;---------------------SLEEP(%ss)-------------------&quot; %s)</span><br><span class="line">#wait(3)</span><br><span class="line">#检查网络计数</span><br><span class="line">check_net_count &#x3D; 0</span><br><span class="line">#重连计数</span><br><span class="line">reconnect_count &#x3D; 0</span><br><span class="line">#域名索引</span><br><span class="line">domain_index &#x3D; 0</span><br><span class="line">def check_net():</span><br><span class="line">    &#39;&#39;&#39;检查网络&#39;&#39;&#39;</span><br><span class="line">    print(&quot;&quot;);</span><br><span class="line">    global check_net_count</span><br><span class="line">    global reconnect_count</span><br><span class="line">    global domain_index</span><br><span class="line">    check_net_count&#x3D;check_net_count+1</span><br><span class="line">    log(&quot;---------------------CHECK_NET_STA(%d)---------------------&quot; %check_net_count)</span><br><span class="line">    #ping_list &#x3D;[&quot;www.qq.com&quot;,&quot;www.163.com&quot;,&quot;www.sohu.com&quot;]</span><br><span class="line">    ping_list &#x3D;[&quot;www.baidu.com&quot;,&quot;www.163.com&quot;,&quot;www.qq.com&quot;]</span><br><span class="line">    #ping_list &#x3D;[&quot;www.baidu.com&quot;,&quot;www.qq.com&quot;,&quot;www.163.com&quot;,&quot;www.sohu.com&quot;,&quot;www.sina.com&quot;,&quot;www.oschina.net&quot;]</span><br><span class="line">    ping_str &#x3D; &quot;ping -n 1 &quot; + ping_list[(domain_index)%(len(ping_list))]</span><br><span class="line">    log(&quot;INFO:PING:[&quot;+ ping_list[(domain_index)%(len(ping_list))] +&quot;]...&quot;)</span><br><span class="line">    domain_index &#x3D; domain_index + 1;</span><br><span class="line">    #ret &#x3D; os.system(&quot;ping www.qq.com&quot;)</span><br><span class="line">    ret &#x3D; os.system(ping_str)</span><br><span class="line">    log(&quot;INFO:PING STATUS_CODE:%d&quot; %ret)</span><br><span class="line">    if ret:</span><br><span class="line">        #try again</span><br><span class="line">        log(&quot;WARN:NET MAY DOWN,try2 next domain!!!&quot;)</span><br><span class="line">        #time.sleep(5)#暂停N秒</span><br><span class="line">        wait(3)</span><br><span class="line">        ping_str &#x3D; &quot;ping &quot; + ping_list[(domain_index)%(len(ping_list))]</span><br><span class="line">        log(&quot;INFO:PING2:[&quot;+ ping_list[(domain_index)%(len(ping_list))] +&quot;]...&quot;)</span><br><span class="line">        domain_index &#x3D; domain_index + 1; # domain_index+&#x3D;1</span><br><span class="line">        ret &#x3D; os.system(ping_str)</span><br><span class="line">        log(&quot;INFO:PING2 STATUS_CODE:%d&quot; %ret)</span><br><span class="line">        if ret:</span><br><span class="line">            #try again</span><br><span class="line">            log(&quot;WARN:NET MAY DOWN,try3 next domain!!!&quot;)</span><br><span class="line">            #time.sleep(5)#暂停N秒</span><br><span class="line">            wait(3)</span><br><span class="line">            ping_str &#x3D; &quot;ping &quot; + ping_list[(domain_index)%(len(ping_list))]</span><br><span class="line">            log(&quot;INFO:PING3:[&quot;+ ping_list[(domain_index)%(len(ping_list))] +&quot;]...&quot;)</span><br><span class="line">            domain_index &#x3D; domain_index + 1; # domain_index+&#x3D;1</span><br><span class="line">            ret &#x3D; os.system(ping_str)</span><br><span class="line">            log(&quot;INFO:PING3 STATUS_CODE:%d&quot; %ret)</span><br><span class="line">    if not ret:</span><br><span class="line">        log(&quot;INFO:NET IS OK (RC&#x3D;%d)!!&quot; %reconnect_count)</span><br><span class="line">        log(&quot;---------------------CHECK_NET_END(%d)---------------------\n&quot; %check_net_count)</span><br><span class="line">    else:</span><br><span class="line">        print(CAO_NI_MA)</span><br><span class="line">        log(&quot;FUCK:NET IS DOWN!&quot;)</span><br><span class="line">         </span><br><span class="line">        reconnect_count &#x3D; reconnect_count + 1</span><br><span class="line">        chcCount()</span><br><span class="line">        log(&quot;INFO:尝试断开重连(%d)...&quot; %reconnect_count);</span><br><span class="line">        #先断开连接</span><br><span class="line">        log(&quot;INFO:尝试断开连接...&quot;);</span><br><span class="line">        netsh_ret &#x3D; os.system(&quot;netsh wlan disconnect&quot;)</span><br><span class="line">        netsh_ret1 &#x3D; os.system(&#39;netsh interface set interface &quot;以太网&quot; disabled&#39;)</span><br><span class="line">        wait(3)</span><br><span class="line">        log(&quot;INFO:尝试重新连接...&quot;);</span><br><span class="line">        netsh_ret &#x3D; os.system(&quot;netsh wlan connect name&#x3D;xxzx708&quot;)</span><br><span class="line">        netsh_ret1 &#x3D; os.system(&#39;netsh interface set interface &quot;以太网&quot; enabled&#39;)</span><br><span class="line">        #wait(2)</span><br><span class="line">        log(&quot;INFO:NETSH_RET STATUS_CODE:%d&quot; %netsh_ret)</span><br><span class="line">        log(&quot;---------------------CHECK_NET_END(%d)---------------------\n&quot; %check_net_count)</span><br><span class="line"> </span><br><span class="line">intcCount()</span><br><span class="line">while True:</span><br><span class="line">    check_net()</span><br><span class="line">    time.sleep(30)#每30秒PING一次</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.oschina.net/code/snippet_81981_47300" target="_blank" rel="noopener">原文链接</a></p>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%88%B1%E5%89%AA%E8%BE%91%E8%A7%86%E9%A2%91%E5%88%87%E5%89%B2%E8%84%9A%E6%9C%AC.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    爱剪辑视频切割脚本
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/windwos%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">windwos安全事件处理总结</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Chuanwei &copy; 2022 
+            <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a href="https://github.com/zthxxx/hexo-theme-Wikitten" target="_blank" rel="noopener">wikitten</a>
+            
+                <br>
+				<span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | 
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"><span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>

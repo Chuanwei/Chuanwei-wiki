@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>漏洞披露网站监测告警脚本 | Chuanwei&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="漏洞预警" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="17、18年安全高危漏洞频发，每天人工检查各个网站高危漏洞报告比较麻烦，我想到这个思路，与同事沟通后共同写了这个简单的脚本，每天定时爬取cnvd重大安全通报的漏洞，利用smtp服务器发邮件提醒！使用selenium webdriver 防止被反爬虫屏蔽。同理可后续可扩展其他网站。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="漏洞披露网站监测告警脚本">
+<meta property="og:url" content="http://wiki.viewcn.cn/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%BC%8F%E6%B4%9E%E6%8A%AB%E9%9C%B2%E7%BD%91%E7%AB%99%E7%9B%91%E6%B5%8B%E5%91%8A%E8%AD%A6%E8%84%9A%E6%9C%AC.html">
+<meta property="og:site_name" content="Chuanwei&#39;s Wiki">
+<meta property="og:description" content="17、18年安全高危漏洞频发，每天人工检查各个网站高危漏洞报告比较麻烦，我想到这个思路，与同事沟通后共同写了这个简单的脚本，每天定时爬取cnvd重大安全通报的漏洞，利用smtp服务器发邮件提醒！使用selenium webdriver 防止被反爬虫屏蔽。同理可后续可扩展其他网站。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-06-06T07:33:45.000Z">
+<meta property="article:modified_time" content="2018-06-06T07:33:45.000Z">
+<meta property="article:author" content="Chuanwei">
+<meta property="article:tag" content="漏洞预警">
+<meta name="twitter:card" content="summary">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Chuanwei&#39;s Wiki" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Chuanwei&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/tools">工具</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/tools">工具</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>分类</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            学习材料
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%96%87%E7%AB%A0%E6%94%B6%E9%9B%86.html">网络安全文章收集</a></li>  <li class="file"><a href="/wiki/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%BD%91%E5%9D%80%E6%94%B6%E9%9B%86.html">网络安全网址收集</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            安全运维
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file active"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%BC%8F%E6%B4%9E%E6%8A%AB%E9%9C%B2%E7%BD%91%E7%AB%99%E7%9B%91%E6%B5%8B%E5%91%8A%E8%AD%A6%E8%84%9A%E6%9C%AC.html">漏洞披露网站监测告警脚本</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/linux%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">linux安全事件处理总结</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/windwos%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">windwos安全事件处理总结</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%90%AD%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E7%9A%84ELK%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F.html">搭建安全认证的ELK日志系统</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            渗透测试
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            信息收集
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/Nmap%E6%89%AB%E6%8F%8F%E7%BB%93%E6%9E%9CXML%E5%A4%84%E7%90%86%E8%BD%AC%E4%B8%BACSV%E6%96%87%E4%BB%B6.html">Nmap扫描结果xml处理</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            内网渗透
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8Fwindows%E7%AF%87.html">内网渗透windows篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            工具教程
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/Nessus-%E5%AE%89%E8%A3%85%E7%A6%BB%E7%BA%BF%E6%BF%80%E6%B4%BB%E5%B9%B6%E5%8D%87%E7%BA%A7.html">Nessus-安装离线激活并升级</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            靶场笔记
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            sqli-labs
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/sqli-labs/sqli-libs%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%20less%201-10.html">sqli-libs学习笔记 Less 1-10</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            生活点滴
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E5%8F%B0%E6%B9%BE%E4%B9%8B%E8%A1%8C.html">台湾之行</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%BD%91%E7%BB%9C%E6%96%AD%E5%BC%80%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5%E8%84%9A%E6%9C%AC.html">网络断开自动连接脚本</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%88%B1%E5%89%AA%E8%BE%91%E8%A7%86%E9%A2%91%E5%88%87%E5%89%B2%E8%84%9A%E6%9C%AC.html">爱剪辑视频切割脚本</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E8%A5%BF%E8%97%8F%E4%B9%8B%E8%A1%8C.html">西藏之行</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            等级保护
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            测评指导书
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            主机层面
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E4%B8%BB%E6%9C%BA%E5%B1%82%E9%9D%A2/MYSQL%E6%95%B0%E6%8D%AE%E5%BA%93.html">Mysql数据库测评</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络层面
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E7%BD%91%E7%BB%9C%E5%B1%82%E9%9D%A2/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87.html">网络设备</a></li>  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E7%BD%91%E7%BB%9C%E5%B1%82%E9%9D%A2/%E7%BD%91%E7%BB%9C%E5%85%A8%E5%B1%80.html">网络全局</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            编程学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            git学习
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/git%E5%AD%A6%E4%B9%A0/github%E7%9A%84gh-pages%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0.html">github和hexo博客搭建笔记</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-安全运维/漏洞披露网站监测告警脚本" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/%E6%BC%8F%E6%B4%9E%E9%A2%84%E8%AD%A6/" rel="tag">漏洞预警</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%BC%8F%E6%B4%9E%E6%8A%AB%E9%9C%B2%E7%BD%91%E7%AB%99%E7%9B%91%E6%B5%8B%E5%91%8A%E8%AD%A6%E8%84%9A%E6%9C%AC.html">
+            <time datetime="2018-06-06T07:33:45.000Z" itemprop="datePublished">2018-06-06</time>
+        </a>
+    </div>
+
+
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%BC%8F%E6%B4%9E%E6%8A%AB%E9%9C%B2%E7%BD%91%E7%AB%99%E7%9B%91%E6%B5%8B%E5%91%8A%E8%AD%A6%E8%84%9A%E6%9C%AC.html">
+            <time datetime="2018-06-06T07:33:45.000Z" itemprop="datePublished">2018-06-06</time>
+        </a>
+    </div>
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/raw/master/source/_posts/安全运维/漏洞披露网站监测告警脚本.md' target="_blank" rel="noopener"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/edit/master/source/_posts/安全运维/漏洞披露网站监测告警脚本.md' target="_blank" rel="noopener"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/commits/master/source/_posts/安全运维/漏洞披露网站监测告警脚本.md' target="_blank" rel="noopener"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            漏洞披露网站监测告警脚本
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <p>17、18年安全高危漏洞频发，每天人工检查各个网站高危漏洞报告比较麻烦，我想到这个思路，与同事沟通后共同写了这个简单的脚本，每天定时爬取cnvd重大安全通报的漏洞，利用smtp服务器发邮件提醒！使用selenium webdriver 防止被反爬虫屏蔽。同理可后续可扩展其他网站。</p>
+<a id="more"></a>
+
+<p>main.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line">#encoding:utf-8</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">@author:Liod</span><br><span class="line">@file:main.py</span><br><span class="line">@time:18-1-19上午11:47</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">import requests,re,datetime,smtplib,time,sys</span><br><span class="line">from lxml import etree</span><br><span class="line">from email.mime.text import MIMEText</span><br><span class="line">from email.header import Header</span><br><span class="line">from setting import *</span><br><span class="line">from selenium import webdriver</span><br><span class="line">import logging</span><br><span class="line"></span><br><span class="line">class BugSpider(object):</span><br><span class="line"></span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.bugUrl &#x3D; &quot;http:&#x2F;&#x2F;www.cnvd.org.cn&#x2F;webinfo&#x2F;list?type&#x3D;14&quot;</span><br><span class="line">        self.requests &#x3D; requests.session()</span><br><span class="line">        self.mail &#x3D; [&quot;mail.***.gov.cn&quot;, &quot;*******&quot;, &quot;*****&quot;]</span><br><span class="line">        self.responseContent &#x3D; self.getUrlResponse_Result()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    def spiderBaner(self):</span><br><span class="line">        headers &#x3D; &#123;</span><br><span class="line">            &quot;Accept&quot;:&quot;text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8&quot;,</span><br><span class="line">            &quot;User-Agent&quot;:&quot;Mozilla&#x2F;5.0 (X11; Linux x86_64; rv:52.0) Gecko&#x2F;20100101 Firefox&#x2F;52.0&quot;,</span><br><span class="line">            &quot;Referer&quot;:&quot;http:&#x2F;&#x2F;www.cnvd.org.cn&#x2F;&quot;,</span><br><span class="line">            &quot;Accept-Language&quot;:&quot;zh-CN,zh;q&#x3D;0.9&quot;,</span><br><span class="line">            &quot;Cookie&quot;:self.getCookie(),</span><br><span class="line">            &quot;Host&quot;:&quot;www.cnvd.org.cn&quot;,</span><br><span class="line">            &quot;Cache-Control&quot;:&quot;no-cache&quot;,</span><br><span class="line">            &quot;Pragma&quot;:&quot;no-cache&quot;,</span><br><span class="line">            &quot;Connection&quot;:&quot;keep-alive&quot;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return headers</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    def getUrlResponse_Result(self):</span><br><span class="line">        responseResult &#x3D; &#123;&#125;</span><br><span class="line">        response &#x3D; self.requests.get(self.bugUrl, headers &#x3D; self.spiderBaner())</span><br><span class="line"></span><br><span class="line">        data &#x3D; re.findall(r&#39;&lt;td width&#x3D;&quot;13%&quot;&gt;(.*?)&lt;&#x2F;td&gt;&#39; , response.content)</span><br><span class="line">        current_click &#x3D; re.findall(r&#39;&lt;td width&#x3D;&quot;9%&quot;&gt;(.*?)&lt;&#x2F;td&gt;&#39;, response.content)</span><br><span class="line">        pageTree &#x3D; etree.HTML(response.content)</span><br><span class="line">        href &#x3D; map(lambda x:self.bugUrl.split(&quot;&#x2F;&quot;)[0] + &quot;&#x2F;&#x2F;&quot; + self.bugUrl.split(&quot;&#x2F;&quot;)[2] + x, pageTree.xpath(&#39;&#x2F;&#x2F;tr&#x2F;td&#x2F;a&#x2F;@href&#39;))</span><br><span class="line">        title &#x3D; map(lambda x:x.strip(), pageTree.xpath(&#39;&#x2F;&#x2F;tr&#x2F;td&#x2F;a&#x2F;text()&#39;))</span><br><span class="line">        for i in range(0, len(title)):</span><br><span class="line">            if data[i] in responseResult.keys():</span><br><span class="line">                responseResult[&quot;%s&quot;%(data[i])].insert(-1, [title[i], href[i], data[i], current_click[i]])</span><br><span class="line">            else:</span><br><span class="line">                responseResult[&quot;%s&quot;%(data[i])] &#x3D; [[title[i], href[i], data[i], current_click[i]]]</span><br><span class="line">        self.responseContent &#x3D; responseResult</span><br><span class="line">        return responseResult</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    def getDateUpdate(self, dateResult):</span><br><span class="line">        dateRes &#x3D; filter(lambda x:x, dateResult)</span><br><span class="line">        yestday &#x3D; datetime.date.today() - datetime.timedelta(days&#x3D;2)</span><br><span class="line">        yestdayTime &#x3D; yestday.strftime(&quot;%Y-%m-%d&quot;)</span><br><span class="line">        nowTime &#x3D; datetime.datetime.now().strftime(&quot;%Y-%m-%d&quot;)</span><br><span class="line">        # return filter(lambda x:x&#x3D;&#x3D;nowTime, dateResult)</span><br><span class="line">        updateDate &#x3D; filter(lambda x: x &gt;&#x3D; yestdayTime, dateRes)</span><br><span class="line">        # return map(lambda x: dateResult[x], updateDate)</span><br><span class="line">        #return filter(lambda x:x&#x3D;&#x3D;yestdayTime, dateResult)     # 返回昨天的漏洞信息</span><br><span class="line">        return filter(lambda x:x&#x3D;&#x3D;nowTime, dateResult)    #返回今天的漏洞信息</span><br><span class="line"></span><br><span class="line">    def modileText(self, code&#x3D;-1):</span><br><span class="line">        if code &#x3D;&#x3D; -1:</span><br><span class="line">            result &#x3D; &quot;&quot;</span><br><span class="line">            modileKey &#x3D; self.getDateUpdate(self.responseContent)</span><br><span class="line">            modileText &#x3D; map(lambda x: self.responseContent[&quot;%s&quot;%x], modileKey)</span><br><span class="line">            for i in modileText[0]:     #这里只返回第一个因为判断邮件播报的是一天内的</span><br><span class="line">                result +&#x3D; u&quot;漏洞标题:  %-39s\n详细信息:%-45s\n漏洞预警时间:%-10s \n漏洞点击量:%s \n\n\n&quot;%(i[0], i[1], i[2], i[3])</span><br><span class="line">            ress &#x3D; &quot;&quot;&quot;%s&quot;&quot;&quot;%result</span><br><span class="line">            return ress</span><br><span class="line">        else:</span><br><span class="line">            return u&quot;&quot;&quot;暂时未有漏洞&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def sendMail(self, receiveMailName&#x3D;[], receiveAuthor&#x3D;&quot;&quot; , code&#x3D;-1):</span><br><span class="line">        nowTime &#x3D; datetime.datetime.now().strftime(&quot;%Y-%m-%d&quot;)</span><br><span class="line">        message &#x3D; MIMEText(&#39;%s\n%s\n%s&#39; % (u&#39;信息安全漏洞预警:&#39;, self.modileText(code), u&#39;cnvdspider!!&#39;), &#39;plain&#39;, &#39;utf-8&#39;)</span><br><span class="line">        message[&#39;From&#39;] &#x3D; &quot;信息安全预警 &lt;%s&gt;&quot; % &quot;hngsteam@icsp.org.cn&quot;</span><br><span class="line">        message[&#39;To&#39;] &#x3D; &quot;,&quot;.join(receiveAuthor)</span><br><span class="line">        if receiveAuthor &#x3D;&#x3D; adminList():</span><br><span class="line">            subject &#x3D; &quot;%s 管理员你好！今天未发现新的漏洞预警！&quot; % nowTime</span><br><span class="line">        else:</span><br><span class="line">            subject &#x3D; &quot;%s 您收到一个新的信息安全漏洞预警！&quot; % nowTime</span><br><span class="line">        subject &#x3D; &quot;%s  漏洞预警&quot;%nowTime</span><br><span class="line">        message[&#39;Subject&#39;] &#x3D; Header(subject, &#39;utf-8&#39;)</span><br><span class="line">        sendAuthor &#x3D; &quot;test@test.com&quot;</span><br><span class="line">        try:</span><br><span class="line">            mailServer &#x3D; smtplib.SMTP(self.mail[0], 25)</span><br><span class="line">            mailServer.login(self.mail[1], self.mail[2])</span><br><span class="line">            mailServer.sendmail(sendAuthor, receiveMailName, message.as_string())</span><br><span class="line">            mailServer.close()</span><br><span class="line">            print u&quot;邮件发送成功&quot;</span><br><span class="line">        except Exception as e:</span><br><span class="line">            print e</span><br><span class="line"></span><br><span class="line">    def getCookie(self):</span><br><span class="line">        self.spiderFirefox &#x3D; webdriver.Firefox()</span><br><span class="line">        self.spiderFirefox.get(self.bugUrl)</span><br><span class="line">        time.sleep(5)</span><br><span class="line">        cookies &#x3D; &quot;&quot;</span><br><span class="line">        for cookie in self.spiderFirefox.get_cookies():</span><br><span class="line">            cookies +&#x3D; u&quot;%s&#x3D;%s; &quot;%(cookie[&quot;name&quot;], cookie[&quot;value&quot;])</span><br><span class="line">        self.spiderFirefox.close()</span><br><span class="line">        return cookies</span><br><span class="line"></span><br><span class="line">    def checkResponseBug(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        @函数方法:函数检测今日是否有漏洞，无漏洞发送管理员，有漏洞全体发送</span><br><span class="line">        :return: </span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        if self.getDateUpdate(self.getUrlResponse_Result()) &#x3D;&#x3D; []:</span><br><span class="line">            self.sendMail(receiveMailName&#x3D;adminList(), receiveAuthor&#x3D;adminList(), code&#x3D;1)</span><br><span class="line">        else:</span><br><span class="line">            self.sendMail(receiveMailName&#x3D;userlist(), receiveAuthor&#x3D;userlist())</span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &quot;__main__&quot;:</span><br><span class="line">    from apscheduler.schedulers.blocking import BlockingScheduler</span><br><span class="line">    from datetime import date</span><br><span class="line">    logging.basicConfig()</span><br><span class="line">    try:</span><br><span class="line">        sched &#x3D; BlockingScheduler()</span><br><span class="line">        a &#x3D; BugSpider()</span><br><span class="line">        #a.checkResponseBug()</span><br><span class="line">        #job &#x3D; sched.add_job(a.checkResponseBug, &#39;interval&#39;, seconds&#x3D;10)</span><br><span class="line">        job &#x3D; sched.add_job(a.checkResponseBug, &#39;cron&#39;, hour&#x3D;&#39;10,12,15,17,18&#39;, minute&#x3D;&quot;10&quot;, second&#x3D;&quot;0&quot;)</span><br><span class="line">        sched.start()</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print e</span><br></pre></td></tr></table></figure>
+
+
+<p>setting.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#encoding:utf-8</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">@author:Liod Chuanwei</span><br><span class="line">@file:setting.py</span><br><span class="line">@time:18-1-19下午4:00</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">def adminList():</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    @函数方法:返回发送管理员的邮箱地址</span><br><span class="line">    :return: [] type list</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    return [&quot;admin@lioder.com&quot;]</span><br><span class="line"></span><br><span class="line">def userlist():</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    @函数方法:返回普通用户的邮箱地址</span><br><span class="line">    :return: [] tye list</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    return [&quot;author@qq.com&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>详见github <a href="https://github.com/Chuanwei/Cnvdspider.git" target="_blank" rel="noopener">https://github.com/Chuanwei/Cnvdspider.git</a></p>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/windwos%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    windwos安全事件处理总结
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/Nessus-%E5%AE%89%E8%A3%85%E7%A6%BB%E7%BA%BF%E6%BF%80%E6%B4%BB%E5%B9%B6%E5%8D%87%E7%BA%A7.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Nessus-安装离线激活并升级</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Chuanwei &copy; 2022 
+            <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a href="https://github.com/zthxxx/hexo-theme-Wikitten" target="_blank" rel="noopener">wikitten</a>
+            
+                <br>
+				<span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | 
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"><span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
