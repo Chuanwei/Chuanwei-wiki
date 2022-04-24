@@ -8,6 +8,27 @@ categories:
 tags: [git,hexo]
 ---
 
+# 安装node
+
+```
+1.下载安装
+npm install -g n --registry https://registry.npm.taobao.org
+2.下载指定版本(后面跟版本号) hexo不支持高版本node
+sudo n 10.5.0
+3.下载最新版本
+sudo n latest
+sudo n stable
+4.显示已安装哪些版本
+n ls
+5.切换使用版本(后面跟版本号)
+sudo n 10.5.0
+也可以输入
+sudo n
+查看已安装版本，上下切换使用哪个版本
+6.删除指定版本
+sudo n rm 10.5.0
+
+```
 
 # 安装hexo
 
