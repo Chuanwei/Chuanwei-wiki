@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>github和hexo博客搭建笔记 | Chuanwei&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="git,hexo" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="安装hexo123npm i -g hexohexo init #首次安装,迁移不要使用npm install hexo-deployer-git --save 修改配置文件，发布到gh-pages分支_config.yml 1234deploy:  type: git  repo: git@github.com:Chuanwei&#x2F;Chuanwei-wiki.git  branch: g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="github和hexo博客搭建笔记">
+<meta property="og:url" content="http://wiki.viewcn.cn/wiki/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/git%E5%AD%A6%E4%B9%A0/github%E7%9A%84gh-pages%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0.html">
+<meta property="og:site_name" content="Chuanwei&#39;s Wiki">
+<meta property="og:description" content="安装hexo123npm i -g hexohexo init #首次安装,迁移不要使用npm install hexo-deployer-git --save 修改配置文件，发布到gh-pages分支_config.yml 1234deploy:  type: git  repo: git@github.com:Chuanwei&#x2F;Chuanwei-wiki.git  branch: g">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-05-13T07:20:11.000Z">
+<meta property="article:modified_time" content="2019-10-06T08:29:11.000Z">
+<meta property="article:author" content="Chuanwei">
+<meta property="article:tag" content="git">
+<meta property="article:tag" content="hexo">
+<meta name="twitter:card" content="summary">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Chuanwei&#39;s Wiki" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Chuanwei&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/tools">工具</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/tools">工具</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>分类</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            学习材料
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%BD%91%E5%9D%80%E6%94%B6%E9%9B%86.html">网络安全网址收集</a></li>  <li class="file"><a href="/wiki/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%96%87%E7%AB%A0%E6%94%B6%E9%9B%86.html">网络安全文章收集</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            安全运维
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/linux%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">linux安全事件处理总结</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/windwos%E5%AE%89%E5%85%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%80%BB%E7%BB%93.html">windwos安全事件处理总结</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%BC%8F%E6%B4%9E%E6%8A%AB%E9%9C%B2%E7%BD%91%E7%AB%99%E7%9B%91%E6%B5%8B%E5%91%8A%E8%AD%A6%E8%84%9A%E6%9C%AC.html">漏洞披露网站监测告警脚本</a></li>  <li class="file"><a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%90%AD%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E7%9A%84ELK%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F.html">搭建安全认证的ELK日志系统</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            渗透测试
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            信息收集
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/Nmap%E6%89%AB%E6%8F%8F%E7%BB%93%E6%9E%9CXML%E5%A4%84%E7%90%86%E8%BD%AC%E4%B8%BACSV%E6%96%87%E4%BB%B6.html">Nmap扫描结果xml处理</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            内网渗透
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8Fwindows%E7%AF%87.html">内网渗透windows篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            工具教程
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/Nessus-%E5%AE%89%E8%A3%85%E7%A6%BB%E7%BA%BF%E6%BF%80%E6%B4%BB%E5%B9%B6%E5%8D%87%E7%BA%A7.html">Nessus-安装离线激活并升级</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            靶场笔记
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            sqli-labs
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/sqli-labs/sqli-libs%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%20less%201-10.html">sqli-libs学习笔记 Less 1-10</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            生活点滴
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E5%8F%B0%E6%B9%BE%E4%B9%8B%E8%A1%8C.html">台湾之行</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%88%B1%E5%89%AA%E8%BE%91%E8%A7%86%E9%A2%91%E5%88%87%E5%89%B2%E8%84%9A%E6%9C%AC.html">爱剪辑视频切割脚本</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E7%BD%91%E7%BB%9C%E6%96%AD%E5%BC%80%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5%E8%84%9A%E6%9C%AC.html">网络断开自动连接脚本</a></li>  <li class="file"><a href="/wiki/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/%E8%A5%BF%E8%97%8F%E4%B9%8B%E8%A1%8C.html">西藏之行</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            等级保护
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            测评指导书
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            主机层面
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E4%B8%BB%E6%9C%BA%E5%B1%82%E9%9D%A2/MYSQL%E6%95%B0%E6%8D%AE%E5%BA%93.html">Mysql数据库测评</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络层面
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E7%BD%91%E7%BB%9C%E5%B1%82%E9%9D%A2/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87.html">网络设备</a></li>  <li class="file"><a href="/wiki/%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/%E6%B5%8B%E8%AF%84%E6%8C%87%E5%AF%BC%E4%B9%A6/%E7%BD%91%E7%BB%9C%E5%B1%82%E9%9D%A2/%E7%BD%91%E7%BB%9C%E5%85%A8%E5%B1%80.html">网络全局</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            编程学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            git学习
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file active"><a href="/wiki/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/git%E5%AD%A6%E4%B9%A0/github%E7%9A%84gh-pages%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0.html">github和hexo博客搭建笔记</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-编程学习/git学习/github的gh-pages搭建hexo博客搭建笔记" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/">编程学习</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/git%E5%AD%A6%E4%B9%A0/">git学习</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/git/" rel="tag">git</a>, <a class="tag-link" href="/tags/hexo/" rel="tag">hexo</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/git%E5%AD%A6%E4%B9%A0/github%E7%9A%84gh-pages%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0.html">
+            <time datetime="2018-05-13T07:20:11.000Z" itemprop="datePublished">2018-05-13</time>
+        </a>
+    </div>
+
+
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/git%E5%AD%A6%E4%B9%A0/github%E7%9A%84gh-pages%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0.html">
+            <time datetime="2019-10-06T08:29:11.000Z" itemprop="datePublished">2019-10-06</time>
+        </a>
+    </div>
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/raw/master/source/_posts/编程学习/git学习/github的gh-pages搭建hexo博客搭建笔记.md' target="_blank" rel="noopener"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/edit/master/source/_posts/编程学习/git学习/github的gh-pages搭建hexo博客搭建笔记.md' target="_blank" rel="noopener"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a href='https://github.com/Chuanwei/Chuanwei-wiki/commits/master/source/_posts/编程学习/git学习/github的gh-pages搭建hexo博客搭建笔记.md' target="_blank" rel="noopener"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            github和hexo博客搭建笔记
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <h1 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm i -g hexo</span><br><span class="line">hexo init #首次安装,迁移不要使用</span><br><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<h1 id="修改配置文件，发布到gh-pages分支"><a href="#修改配置文件，发布到gh-pages分支" class="headerlink" title="修改配置文件，发布到gh-pages分支"></a>修改配置文件，发布到gh-pages分支</h1><p>_config.yml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:Chuanwei&#x2F;Chuanwei-wiki.git</span><br><span class="line">  branch: gh-pages</span><br></pre></td></tr></table></figure>
+<h1 id="配置ssh"><a href="#配置ssh" class="headerlink" title="配置ssh"></a>配置ssh</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git&gt;ssh-keygen -t rsa -C &quot;xxxxx邮箱@qq.com&quot;</span><br><span class="line">Linux 系统：~&#x2F;.ssh</span><br><span class="line">Mac 系统：~&#x2F;.ssh</span><br><span class="line">Windows ：C:\Users\username\.ssh</span><br><span class="line">最后把公钥id_rsa.pub的内容添加到 GitHub</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置github"><a href="#配置github" class="headerlink" title="配置github"></a>配置github</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">新建一个项目Chuanwei-wiki</span><br><span class="line"></span><br><span class="line">创建gh-pages分支</span><br><span class="line">git branch  gh-pages</span><br><span class="line">git checkout gh-pages</span><br><span class="line">git push origin gh-pages</span><br><span class="line"></span><br><span class="line">删除分支</span><br><span class="line">git branch -d &lt;BranchName&gt;</span><br><span class="line">git push origin --delete &lt;BranchName&gt;</span><br><span class="line"></span><br><span class="line">打开Chuanwei-wiki项目的配置settings界面</span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;Chuanwei&#x2F;Chuanwei-wiki&#x2F;settings</span><br><span class="line"></span><br><span class="line">Source 修改为gh-pages</span><br><span class="line"></span><br><span class="line">Custom domain域名设置为自己的域名：wiki.viewcn.cn</span><br><span class="line"></span><br><span class="line">添加CNAME文件到gh-pages分支目录中，文件名称：CNAME，内容：wiki.viewcn.cn</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;Chuanwei&#x2F;Chuanwei-wiki&#x2F;blob&#x2F;gh-pages&#x2F;CNAME</span><br></pre></td></tr></table></figure>
+
+<h1 id="修改dns映射"><a href="#修改dns映射" class="headerlink" title="修改dns映射"></a>修改dns映射</h1><p>我的域名是在dnspod，方法都差不多。<br>新建一条cname记录：<br>主机记录：wiki   记录值：Chuanwei.github.io.<br>Chuanwei,是我的github名称,使用ping能通Chuanwei.github.io，说明是正常的。<br>此时可以使用wiki.viewcn.cn访问博客了，还没生成静态文件，现在前台gh-pages分支是空的，无法访问。</p>
+<h1 id="日常发布文件命令"><a href="#日常发布文件命令" class="headerlink" title="日常发布文件命令"></a>日常发布文件命令</h1><p>下面将在maste分支上执行文章发布，会把网站静态文件发布到gh-pages分支，打开网站即显示的是gh-pages分支内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;建议第一步拉取最新的github上的master</span><br><span class="line">git pull</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;电脑上写好的文章md放入文件夹</span><br><span class="line">source\_posts</span><br><span class="line">&#x2F;&#x2F;开始发布文章</span><br><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br><span class="line">hexo g -d</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;本地master提交到github</span><br><span class="line">git add .</span><br><span class="line">git commit -m &quot;添加文章&quot;</span><br><span class="line">git push origin master</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;到此文章发布完成</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;切换到gh-pages分支，pull拉取远程gh-pages，可本地查看前台。</span><br><span class="line">git checkout gh-pages</span><br><span class="line">&#x2F;&#x2F;pull github上最新的gh-pages。</span><br><span class="line">git pull</span><br><span class="line">&#x2F;&#x2F;如果报错则强制覆盖本地gh-pages</span><br><span class="line">git fetch --all</span><br><span class="line">git reset --hard origin&#x2F;gh-pages </span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+
+<h1 id="多终端发布"><a href="#多终端发布" class="headerlink" title="多终端发布"></a>多终端发布</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;每次发布完文章，push一下，方便在家里电脑pull，继续工作。</span><br><span class="line">git add .</span><br><span class="line">git commit -m &quot;添加文章&quot;</span><br><span class="line">git push origin master</span><br><span class="line">&#x2F;&#x2F;在家电脑写文章</span><br><span class="line">&#x2F;&#x2F;首次安装一下</span><br><span class="line">npm i -g hexo</span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;pull github上最新的master。</span><br><span class="line">git pull</span><br><span class="line">&#x2F;&#x2F;如果报错则强制覆盖本地master</span><br><span class="line">git fetch --all</span><br><span class="line">git reset --hard origin&#x2F;master </span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+<h1 id="设置国内npm源-解决无法安装hexo"><a href="#设置国内npm源-解决无法安装hexo" class="headerlink" title="设置国内npm源,解决无法安装hexo"></a>设置国内npm源,解决无法安装hexo</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;临时的</span><br><span class="line">npm i -g hexo --registry https:&#x2F;&#x2F;registry.npm.taobao.org</span><br><span class="line">&#x2F;&#x2F;持久的</span><br><span class="line">npm config set registry https:&#x2F;&#x2F;registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+
+<p>至此master分支作为后台文章发布和hexo配置，gh-pages分支作为前台页面。</p>
+<hr>
+<p>本文为原创：转载请注明:<a href="http://wiki.viewcn.cn/">http://wiki.viewcn.cn/</a></p>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%90%AD%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E7%9A%84ELK%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    搭建安全认证的ELK日志系统
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%96%87%E7%AB%A0%E6%94%B6%E9%9B%86.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">网络安全文章收集</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Chuanwei &copy; 2022 
+            <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a href="https://github.com/zthxxx/hexo-theme-Wikitten" target="_blank" rel="noopener">wikitten</a>
+            
+                <br>
+				<span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | 
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"><span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
