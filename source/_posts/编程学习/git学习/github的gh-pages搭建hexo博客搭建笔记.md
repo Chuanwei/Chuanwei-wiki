@@ -1,7 +1,7 @@
 ---
 title: github和hexo博客搭建笔记
 date: 2018-05-13 15:20:11
-updated: 2019-10-06 16:29:11
+updated: 2023-03-24 16:05:11
 categories:
 - 编程学习
 - git学习
@@ -11,32 +11,45 @@ tags: [git,hexo]
 # 安装node
 
 ```
-1.下载安装
+1.下载安装node版本管理工具
 npm install -g n --registry https://registry.npm.taobao.org
-2.下载指定版本(后面跟版本号) hexo不支持高版本node
-sudo n 10.5.0
+2.下载指定版本(后面跟版本号) //hexo版本依赖：https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo
+sudo n 18.15.0
 3.下载最新版本
 sudo n latest
 sudo n stable
 4.显示已安装哪些版本
 n ls
 5.切换使用版本(后面跟版本号)
-sudo n 10.5.0
+sudo n 18.15.0
 也可以输入
 sudo n
 查看已安装版本，上下切换使用哪个版本
 6.删除指定版本
 sudo n rm 10.5.0
 
+7.其他-升级npm
+sudo npm install -g npm
 ```
 
 # 安装hexo
 
 ```
-npm i -g hexo
-hexo init #首次安装,迁移不要使用
+1.首次安装
+sudo npm i hexo-cli -g              //当前版本：6.3.0
+hexo init                           //首次安装,迁移不要使用
 npm install hexo-deployer-git --save
 
+2.升级
+sudo npm i hexo-cli -g --force
+//以下命令分别执行即可
+sudo npm install -g npm-check     //安装npm-check
+sudo npm-check                    //查看系统插件是否需要升级
+sudo npm install -g npm-upgrade   //安装npm-upgrade
+sudo npm-upgrade        //更新package.json
+//在执行npm-upgrade命令后会要求输入yes或者no，直接输入Yes或Y即可
+sudo npm update -g      //更新全局插件
+sudo npm update --save  //更新系统插件
 ```
 # 修改配置文件，发布到gh-pages分支
 
