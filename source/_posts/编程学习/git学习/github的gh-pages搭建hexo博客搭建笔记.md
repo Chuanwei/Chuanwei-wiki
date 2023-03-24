@@ -14,14 +14,14 @@ tags: [git,hexo]
 1.下载安装node版本管理工具
 npm install -g n --registry https://registry.npm.taobao.org
 2.下载指定版本(后面跟版本号) //hexo版本依赖：https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo
-sudo n 18.15.0
+sudo n 10.5.0
 3.下载最新版本
 sudo n latest
 sudo n stable
 4.显示已安装哪些版本
 n ls
 5.切换使用版本(后面跟版本号)
-sudo n 18.15.0
+sudo n 10.5.0
 也可以输入
 sudo n
 查看已安装版本，上下切换使用哪个版本
@@ -36,7 +36,7 @@ sudo npm install -g npm
 
 ```
 1.首次安装
-sudo npm i hexo-cli -g              //当前版本：6.3.0
+sudo npm i hexo-cli -g
 hexo init                           //首次安装,迁移不要使用
 npm install hexo-deployer-git --save
 
@@ -130,7 +130,7 @@ git push origin master
 //切换到gh-pages分支，pull拉取远程gh-pages，可本地查看前台。
 git checkout gh-pages
 //pull github上最新的gh-pages。
-git pull
+git pull origin/gh-pages
 //如果报错则强制覆盖本地gh-pages
 git fetch --all
 git reset --hard origin/gh-pages 
@@ -150,11 +150,11 @@ npm i -g hexo
 npm install hexo-deployer-git --save
 
 //pull github上最新的master。
-git pull
+git pull origin/master
 //如果报错则强制覆盖本地master
 git fetch --all
 git reset --hard origin/master 
-git pull
+git pull origin/master
 ```
 # 设置国内npm源,解决无法安装hexo
 ```

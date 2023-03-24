@@ -49,6 +49,10 @@ git commit -m "update"
 git pull origin master
 git pull origin master --rebase  //优化日志
 
+# 关联 远程分支 Branch 'gh-pages' set up to track remote branch 'gh-pages' from 'origin'.
+git pull简化拉取
+
+git branch --set-upstream-to=origin/gh-pages gh-pages
 ```
 
 # git pull冲突解决
@@ -70,8 +74,6 @@ git push origin webm2.0:webm2.0 --force --all
 git push origin webm2.0:webm2.0 --force --tags
 git push origin webm2.0:master --force --all
 git push origin webm2.0:master --force --tags
-```
-
 ```
 
 ---
