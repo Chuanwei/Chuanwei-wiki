@@ -63,9 +63,10 @@ git fetch --all
 git reset --hard origin/master  强制合并
 ```
 
-# 删除敏感文件
+# 删除误上传的敏感文件
 
 ```
+git rm -r --cached .idea/
 git filter-branch --tree-filter 'rm -rf mapp/plugins/gsil/config.gsil.cfg' HEAD
 git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch mapp/plugins/gsil/config.gsil.cfg' --prune-empty --tag-name-filter cat -- --all
 git push origin --force --all
