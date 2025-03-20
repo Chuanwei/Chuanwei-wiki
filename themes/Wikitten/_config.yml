@@ -21,7 +21,7 @@ customize:
         author: Chuanwei
         author_title: Designer & Programmer
         location: Chengdu, China
-        follow: https://github.com/Chuanwei/
+        follow: https://github.com/chuanwei/
     highlight: monokai
     sidebar: left # sidebar position, options: left, right
     category_perExpand: false # enable article categories list per expanding
@@ -29,7 +29,7 @@ customize:
     favicon: /favicon.ico # path to favicon
     default_index_file: index.md # if this, it will display at site index instead of default index page
     social_links:
-        github: https://github.com/Chuanwei/Chuanwei.github.io
+        github: https://github.com/chuanwei/chuanwei.github.io
         stack-overflow: http://stackoverflow.com/users/7277090/zthxxx?tab=profile
         codepen: http://codepen.io/zthxxx/
         rss: /atom.xml
@@ -61,8 +61,8 @@ search:
 history_control: # make you wiki has history version control in page
     enable: true
     server_link: https://github.com # recommend use GitHub https://github.com
-    user: Chuanwei
-    repertory: Chuanwei-wiki
+    user: chuanwei
+    repertory: wiki
     branch: master
 
 # Comment

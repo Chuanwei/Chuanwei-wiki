@@ -18,7 +18,7 @@ updated: 2019-10-06 16:09:11
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-@author:Chuanwei
+@author:chuanwei
 @file:nmap_to_csv.py
 @time:2019/10/06
 """

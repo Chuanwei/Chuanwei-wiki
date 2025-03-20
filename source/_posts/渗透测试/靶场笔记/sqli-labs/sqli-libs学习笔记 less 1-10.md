@@ -113,8 +113,8 @@ test' or 1=1 # //绕过，使用%23不行，入坑了。
  
 """ 
 @version:  less8-less9
-@author: giantbranch Chuanwei 
-@file: sqli-libs-Chuanwei.py 
+@author: giantbranch chuanwei 
+@file: sqli-libs-chuanwei.py 
 @time: 2018/8/16  
 """ 
 import requests

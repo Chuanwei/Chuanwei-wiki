@@ -84,7 +84,7 @@ git push origin gh-pages
 git branch -d <BranchName>
 git push origin --delete <BranchName>
 
-打开Chuanwei-wiki项目的配置settings界面
+打开wiki项目的配置settings界面
 https://github.com/chuanwei/wiki/settings
 
 Source 修改为gh-pages
