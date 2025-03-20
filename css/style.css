@@ -171,8 +171,6 @@ code {
   height: 40px;
   background-repeat: no-repeat;
   background-image: url("/logo.png");
-  -webkit-background-size: 40px 40px;
-  -moz-background-size: 40px 40px;
   background-size: 40px 40px;
 }
 #container {
@@ -1548,8 +1546,6 @@ ol.toc {
 }
 .archive-article .archive-article-thumbnail .thumbnail .thumbnail-image {
   position: absolute;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
   background-size: cover;
   background-position: center;
 }
@@ -2015,15 +2011,11 @@ ol.toc {
 }
 #recent-post li .item-thumbnail .thumbnail .thumbnail-image {
   position: absolute;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
   background-size: cover;
   background-position: center;
 }
 #recent-post li .item-thumbnail .thumbnail .thumbnail-none {
   background-image: url("images/thumb-default-small.png");
-  -webkit-background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
   background-size: 100% 100%;
 }
 #recent-post li .item-inner a,
