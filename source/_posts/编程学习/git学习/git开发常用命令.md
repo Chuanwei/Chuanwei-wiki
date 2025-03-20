@@ -69,12 +69,16 @@ git reset --hard origin/master  强制合并
 git rm -r --cached .idea/
 git filter-branch --tree-filter 'rm -rf mapp/plugins/gsil/config.gsil.cfg' HEAD
 git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch mapp/plugins/gsil/config.gsil.cfg' --prune-empty --tag-name-filter cat -- --all
+git filter-branch --force --index-filter "git rm -rf --cached --ignore-unmatch .idea" --prune-empty --tag-name-filter cat -- --all
 git push origin --force --all
 git push origin --force --tags
-git push origin webm2.0:webm2.0 --force --all
-git push origin webm2.0:webm2.0 --force --tags
-git push origin webm2.0:master --force --all
-git push origin webm2.0:master --force --tags
+
+# 用工具
+# 安装 git-filter-repo（如果未安装）
+git filter-repo --help || pip install git-filter-repo
+# 从所有历史提交中删除 .idea/ 目录
+git filter-repo --path .idea/ --invert-paths
+git push origin --force --all
 ```
 
 ---
