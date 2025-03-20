@@ -7,7 +7,7 @@ title: Chuanwei's Wiki
 subtitle:
 description: 整理编写安全运维,渗透测试,等级保护,等级测评等信息安全知识！
 keywords: 安全运维,渗透测试,等级保护,等级测评
-author: Chuanwei
+author: chuanwei
 language: zh-CN
 timezone: Asia/Shanghai
 
@@ -81,7 +81,7 @@ theme: Wikitten
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:Chuanwei/Chuanwei-wiki.git
+  repo: git@github.com:chuanwei/wiki.git
   branch: gh-pages
   
 ### Adds nofollow attribute to all external links in your hexo blog posts automatically.

@@ -57,7 +57,7 @@ _config.yml
 ```
 deploy:
   type: git
-  repo: git@github.com:Chuanwei/Chuanwei-wiki.git
+  repo: git@github.com:chuanwei/wiki.git
   branch: gh-pages
 ```
 # 配置ssh
@@ -73,7 +73,7 @@ Windows ：C:\Users\username\.ssh
 # 配置github
 
 ```
-新建一个项目Chuanwei-wiki
+新建一个项目wiki
 
 创建gh-pages分支
 git branch  gh-pages
@@ -85,7 +85,7 @@ git branch -d <BranchName>
 git push origin --delete <BranchName>
 
 打开Chuanwei-wiki项目的配置settings界面
-https://github.com/Chuanwei/Chuanwei-wiki/settings
+https://github.com/chuanwei/wiki/settings
 
 Source 修改为gh-pages
 
@@ -93,7 +93,7 @@ Custom domain域名设置为自己的域名：wiki.viewcn.cn
 
 添加CNAME文件到gh-pages分支目录中，文件名称：CNAME，内容：wiki.viewcn.cn
 
-https://github.com/Chuanwei/Chuanwei-wiki/blob/gh-pages/CNAME
+https://github.com/chuanwei/wiki/blob/gh-pages/CNAME
 
 ```
 
@@ -101,8 +101,8 @@ https://github.com/Chuanwei/Chuanwei-wiki/blob/gh-pages/CNAME
 
 我的域名是在dnspod，方法都差不多。
 新建一条cname记录：
-主机记录：wiki   记录值：Chuanwei.github.io.
-Chuanwei,是我的github名称,使用ping能通Chuanwei.github.io，说明是正常的。
+主机记录：wiki   记录值：chuanwei.github.io.
+chuanwei,是我的github名称,使用ping能通chuanwei.github.io，说明是正常的。
 此时可以使用wiki.viewcn.cn访问博客了，还没生成静态文件，现在前台gh-pages分支是空的，无法访问。
 
 
